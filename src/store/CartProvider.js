@@ -1,5 +1,5 @@
 import CartContext from "./cart-context";
-import { useReducer } from "react";
+import { useReducer, useCallback } from "react";
 
 const defaultCartState = {
   items: [],
@@ -89,11 +89,11 @@ const CartProvider = (props) => {
 
   const clearAllItemsFromCartHandler = () => {
     dispatchCartAction({ type: "CLEARALL" });
+    localStorage.removeItem("cartItems"); // Ensure localStorage is cleared
   };
-
-  const replaceCartItemsHandler = (items) => {
+  const replaceCartItemsHandler = useCallback((items) => {
     dispatchCartAction({ type: "REPLACE", items: items });
-  };
+  }, []);
 
   const cartContext = {
     items: cartState.items,
@@ -101,7 +101,7 @@ const CartProvider = (props) => {
     addItem: addItemToCartHandler,
     removeItem: removeItemFromCartHandler,
     clearAll: clearAllItemsFromCartHandler,
-    replaceCartItems: replaceCartItemsHandler,
+    replaceCartItems: replaceCartItemsHandler, // Now stable
   };
 
   return (

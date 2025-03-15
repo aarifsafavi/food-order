@@ -10,16 +10,10 @@ const Cart = (props) => {
   const [showOrder, setShowOrder] = useState(false);
 
   useEffect(() => {
-    const fetchCartItems = () => {
-      try {
-        const storedItems = JSON.parse(localStorage.getItem("cartItems")) || [];
-        cartCtx.replaceCartItems(storedItems);
-      } catch (error) {
-        console.error("Error fetching cart items from local storage:", error);
-      }
-    };
-
-    fetchCartItems();
+    const storedItems = JSON.parse(localStorage.getItem("cartItems")) || [];
+    if (cartCtx.items.length === 0 && storedItems.length > 0) {
+      cartCtx.replaceCartItems(storedItems);
+    }
   }, [cartCtx]);
 
   const totalAmount = `$${cartCtx.totalAmount.toFixed(2)}`;
